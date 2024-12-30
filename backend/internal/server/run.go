@@ -31,36 +31,36 @@ func Run(
 	defer cancel()
 
 	//--------------------
-	// Init everything
+	// Her şeyi başlat
 	//--------------------
-	// Init logging
+	// Günlük kaydını başlat
 	logger := log.New(stdout, "", log.Flags())
-	logger.Println("starting... ")
-	// Init config
+	logger.Println("başlatılıyor... ")
+	// Yapılandırmayı başlat
 	config, err := config.MakeConfig(args, getenv)
   if err != nil {
-		logger.Printf("Failed to init app config: %v", err.Error())
+		logger.Printf("Uygulama yapılandırması başlatılamadı: %v", err.Error())
 		return err
   }
-	// Init JWT auth
+	// JWT kimlik doğrulamasını başlat
 	tokenAuth := jwtauth.New("HS256", config.SecretBytes, nil)
-	// Init db
+	// Veritabanını başlat
 	dbReadPool, err := db.NewReadPool(config.SqlitePath, ctx)
 	if err != nil {
-		logger.Printf("Failed to init database read pool: %v", err.Error())
+		logger.Printf("Veritabanı okuma havuzu başlatılamadı: %v", err.Error())
 		return err
 	}
 	dbWritePool, err := db.NewWritePool(config.SqlitePath, ctx)
 	if err != nil {
-		logger.Printf("Failed to init database write pool: %v", err.Error())
+		logger.Printf("Veritabanı yazma havuzu başlatılamadı: %v", err.Error())
 		return err
 	}
 	err = db.ApplyMigrations(dbWritePool, ctx)
 	if err != nil {
-		logger.Printf("Failed to apply database migrations: %v", err.Error())
+		logger.Printf("Veritabanı geçişleri uygulanamadı: %v", err.Error())
 		return err
 	}
-	// Init websocket hub
+	// Websocket hub'ını başlat
 	hub := wsserver.New()
 	go hub.Run(
     ctx,
@@ -69,7 +69,7 @@ func Run(
     dbReadPool,
     dbWritePool,
   )
-	// Init Server
+	// Sunucuyu başlat
 	srv := NewServer(
 		logger,
 		&config,
@@ -84,39 +84,39 @@ func Run(
 	}
 
 	//--------------------
-	// Start the webserver
+	// Web sunucusunu başlat
 	//--------------------
 	go func() {
-		logger.Printf("listening on %s\n", httpServer.Addr)
+		logger.Printf("%s adresinde dinleniyor\n", httpServer.Addr)
 		if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			fmt.Fprintf(stderr, "error listening and serving: %s\n", err)
+			fmt.Fprintf(stderr, "dinleme ve hizmet verme hatası: %s\n", err)
 		}
 	}()
 
 	//--------------------
-	// Graceful shutdown
+	// Zarif kapatma
 	//--------------------
 	var wg sync.WaitGroup
-	// Webserver graceful shutdown
-	//TODO: close websockets. Shutdown does not close websckets
+	// Web sunucusunun zarif kapatılması
+	//TODO: websocket'leri kapat. Kapatma websocket'leri kapatmaz
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		<-ctx.Done()
-		logger.Println("Gracefully shutting down webserver...")
+		logger.Println("Web sunucusu zarif bir şekilde kapatılıyor...")
 		shutdownCtx := context.Background()
 		shutdownCtx, cancel := context.WithTimeout(shutdownCtx, 10*time.Second)
 		defer cancel()
 		if err := httpServer.Shutdown(shutdownCtx); err != nil {
-			fmt.Fprintf(stderr, "error shutting down http server: %s\n", err)
+			fmt.Fprintf(stderr, "http sunucusu kapatma hatası: %s\n", err)
 		}
 	}()
-	//example graceful shutdown (e.g could be used for a database)
+	//örnek zarif kapatma (örneğin bir veritabanı için kullanılabilir)
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		<-ctx.Done()
-		logger.Println("Gracefully shutting down test module...")
+		logger.Println("Test modülü zarif bir şekilde kapatılıyor...")
 	}()
 
 	wg.Wait()

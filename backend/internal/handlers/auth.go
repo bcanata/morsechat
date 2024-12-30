@@ -39,21 +39,21 @@ func ServeRegister(
 
     countryCode, ok := morse.ParseCallsign(regData.Callsign)
     if (!ok){
-			validation.RespondError(w, "Invalid callsign", "", http.StatusBadRequest)
+			validation.RespondError(w, "Geçersiz çağrı işareti", "", http.StatusBadRequest)
 			return
     }
 
 		//fail if already logged
 		currentJwtData, err := auth.GetJwtData(r.Context())
 		if err == nil && !currentJwtData.IsAnonymous && currentJwtData.UserId != 0 {
-			validation.RespondError(w, "Already logged in", "", http.StatusBadRequest)
+			validation.RespondError(w, "Zaten giriş yapılmış", "", http.StatusBadRequest)
 			return
 		}
 
 		hash, err := argon2id.CreateHash(regData.Password, argon2id.DefaultParams)
 		if err != nil {
-			validation.RespondError(w, "User registration failed", "", http.StatusInternalServerError)
-			logger.Printf("ServeRegister: password hash error: %v", err.Error())
+			validation.RespondError(w, "Kullanıcı kaydı başarısız", "", http.StatusInternalServerError)
+			logger.Printf("ServeRegister: şifre hash hatası: %v", err.Error())
 			return
 		}
 
@@ -68,23 +68,23 @@ func ServeRegister(
     if sqliteErr, ok := err.(sqlite3.Error); ok {
       if sqliteErr.Code == sqlite3.ErrConstraint {
         if strings.Contains(sqliteErr.Error(), "username"){
-          validation.RespondError(w, "username_taken", "", http.StatusBadRequest)
+          validation.RespondError(w, "kullanıcı adı alınmış", "", http.StatusBadRequest)
           return
         }else if strings.Contains(sqliteErr.Error(), "callsign"){
-          validation.RespondError(w, "callsign_taken", "", http.StatusBadRequest)
+          validation.RespondError(w, "çağrı işareti alınmış", "", http.StatusBadRequest)
           return
         }
       }
     }
 		if err != nil {
-			validation.RespondError(w, "User registration failed", "", http.StatusBadRequest)
-			logger.Printf("ServeRegister: query error: %v", err.Error())
+			validation.RespondError(w, "Kullanıcı kaydı başarısız", "", http.StatusBadRequest)
+			logger.Printf("ServeRegister: sorgu hatası: %v", err.Error())
 			return
 		}
 		id, err := res.LastInsertId()
 		if err != nil {
-			validation.RespondError(w, "User registration failed", "", http.StatusBadRequest)
-			logger.Printf("ServeRegister: query id error: %v", err.Error())
+			validation.RespondError(w, "Kullanıcı kaydı başarısız", "", http.StatusBadRequest)
+			logger.Printf("ServeRegister: sorgu kimlik hatası: %v", err.Error())
 			return
 		}
 
@@ -98,8 +98,8 @@ func ServeRegister(
 		}
     err = auth.SetJwtCookie(w, tokenAuth, jwtData)
 		if err != nil {
-			validation.RespondError(w, "Session creation error", "", http.StatusInternalServerError)
-			logger.Printf("ServeRegister: Jwt creation error: %v", err.Error())
+			validation.RespondError(w, "Oturum oluşturma hatası", "", http.StatusInternalServerError)
+			logger.Printf("ServeRegister: Jwt oluşturma hatası: %v", err.Error())
 			return
     }
 		validation.RespondOk(w, AuthResponse{
@@ -133,12 +133,12 @@ func ServeSessInit(
       var responseSettings *Settings = nil
       responseCountry := "us"
       //get user settings and country from the db if the user is not anonymous
-      if !currentJwtData.IsAnonymous{
+      if (!currentJwtData.IsAnonymous){
         queries := db.New(dbReadPool)
         res, err := queries.GetUserFromId(r.Context(), currentJwtData.UserId)
         if err != nil {
-          validation.RespondError(w, "Data query error", "", http.StatusBadRequest)
-          logger.Printf("ServeSessInit: data query error: %v", err.Error())
+          validation.RespondError(w, "Veri sorgulama hatası", "", http.StatusBadRequest)
+          logger.Printf("ServeSessInit: veri sorgulama hatası: %v", err.Error())
           return
         }
         responseCountry = res.Country.(string)
@@ -146,9 +146,9 @@ func ServeSessInit(
         var userSettings Settings
         userSettingsStr, ok := res.Settings.(string)
         if !ok{
-          logger.Printf("ServeLogin: json settings type assert faied: %v", ok)
+          logger.Printf("ServeLogin: json ayarları türü doğrulama hatası: %v", ok)
         } else if err := json.Unmarshal([]byte(userSettingsStr), &userSettings); err != nil{
-          logger.Printf("ServeLogin: json settings unmarshall faied: %v", err.Error())
+          logger.Printf("ServeLogin: json ayarları ayrıştırma hatası: %v", err.Error())
         }else{
           responseSettings = &userSettings
         }
@@ -171,8 +171,8 @@ func ServeSessInit(
     country := morse.GetVisitorCountry(r)
     callsign, err := morse.GenerateAnonCallsign(country)
     if err != nil{
-			validation.RespondError(w, "Random user creation error", "", http.StatusInternalServerError)
-			logger.Printf("ServeSessInit: Random user creation error: %v", err.Error())
+			validation.RespondError(w, "Rastgele kullanıcı oluşturma hatası", "", http.StatusInternalServerError)
+			logger.Printf("ServeSessInit: Rastgele kullanıcı oluşturma hatası: %v", err.Error())
 			return
     }
 		jwtData := auth.JwtData{
@@ -185,8 +185,8 @@ func ServeSessInit(
 		}
     err = auth.SetJwtCookie(w, tokenAuth, jwtData)
 		if err != nil {
-			validation.RespondError(w, "Session creation error", "", http.StatusInternalServerError)
-			logger.Printf("ServeSessInit: Jwt creation error: %v", err.Error())
+			validation.RespondError(w, "Oturum oluşturma hatası", "", http.StatusInternalServerError)
+			logger.Printf("ServeSessInit: Jwt oluşturma hatası: %v", err.Error())
 			return
     }
 		validation.RespondOk(w, AuthResponse{
@@ -212,8 +212,8 @@ func ServeLogout(
     country := morse.GetVisitorCountry(r)
     callsign, err := morse.GenerateAnonCallsign(country)
     if err != nil{
-			validation.RespondError(w, "Random user creation error", "", http.StatusInternalServerError)
-			logger.Printf("ServeLogout: Random user creation error: %v", err.Error())
+			validation.RespondError(w, "Rastgele kullanıcı oluşturma hatası", "", http.StatusInternalServerError)
+			logger.Printf("ServeLogout: Rastgele kullanıcı oluşturma hatası: %v", err.Error())
 			return
     }
 		jwtData := auth.JwtData{
@@ -226,8 +226,8 @@ func ServeLogout(
 		}
     err = auth.SetJwtCookie(w, tokenAuth, jwtData)
 		if err != nil {
-			validation.RespondError(w, "Session creation error", "", http.StatusInternalServerError)
-			logger.Printf("ServeLogout: Jwt creation error: %v", err.Error())
+			validation.RespondError(w, "Oturum oluşturma hatası", "", http.StatusInternalServerError)
+			logger.Printf("ServeLogout: Jwt oluşturma hatası: %v", err.Error())
 			return
     }
 		validation.RespondOk(w, AuthResponse{
@@ -266,29 +266,29 @@ func ServeLogin(
 		//fail if already logged
 		currentJwtData, err := auth.GetJwtData(r.Context())
 		if err == nil && !currentJwtData.IsAnonymous && currentJwtData.UserId != 0 {
-			validation.RespondError(w, "Already logged in", "", http.StatusBadRequest)
+			validation.RespondError(w, "Zaten giriş yapılmış", "", http.StatusBadRequest)
 			return
 		}
 
 		queries := db.New(dbReadPool)
 		res, err := queries.GetUser(r.Context(), reqData.Username)
 		if err == sql.ErrNoRows {
-			validation.RespondError(w, "invalid_credentials", "", http.StatusBadRequest)
+			validation.RespondError(w, "geçersiz kimlik bilgileri", "", http.StatusBadRequest)
       return
 		} else if err != nil {
-			validation.RespondError(w, "User login failed", "", http.StatusBadRequest)
-			logger.Printf("ServeLogin: query error: %v", err.Error())
+			validation.RespondError(w, "Kullanıcı girişi başarısız", "", http.StatusBadRequest)
+			logger.Printf("ServeLogin: sorgu hatası: %v", err.Error())
 			return
 		}
 
 		match, err := argon2id.ComparePasswordAndHash(reqData.Password, res.Password)
 		if err != nil {
-			validation.RespondError(w, "User login failed", "", http.StatusBadRequest)
-			logger.Printf("ServeLogin: argon2id compare error: %v", err.Error())
+			validation.RespondError(w, "Kullanıcı girişi başarısız", "", http.StatusBadRequest)
+			logger.Printf("ServeLogin: argon2id karşılaştırma hatası: %v", err.Error())
 			return
 		}
 		if !match {
-			validation.RespondError(w, "invalid_credentials", "", http.StatusBadRequest)
+			validation.RespondError(w, "geçersiz kimlik bilgileri", "", http.StatusBadRequest)
 			return
 		}
 
@@ -296,9 +296,9 @@ func ServeLogin(
     var responseSettings *Settings = nil
     userSettingsStr, ok := res.Settings.(string)
     if !ok{
-			logger.Printf("ServeLogin: json settings type assert faied: %v", ok)
+			logger.Printf("ServeLogin: json ayarları türü doğrulama hatası: %v", ok)
     } else if err := json.Unmarshal([]byte(userSettingsStr), &userSettings); err != nil{
-			logger.Printf("ServeLogin: json settings unmarshall faied: %v", err.Error())
+			logger.Printf("ServeLogin: json ayarları ayrıştırma hatası: %v", err.Error())
     }else{
       responseSettings = &userSettings
     }
@@ -313,8 +313,8 @@ func ServeLogin(
 		}
     err = auth.SetJwtCookie(w, tokenAuth, jwtData)
 		if err != nil {
-			validation.RespondError(w, "Session creation error", "", http.StatusInternalServerError)
-			logger.Printf("ServeRegister: Jwt creation error: %v", err.Error())
+			validation.RespondError(w, "Oturum oluşturma hatası", "", http.StatusInternalServerError)
+			logger.Printf("ServeRegister: Jwt oluşturma hatası: %v", err.Error())
 			return
     }
 		validation.RespondOk(w, AuthResponse{
@@ -347,7 +347,7 @@ func ServeValidateCallsign(
 
     _, ok := morse.ParseCallsign(reqData.Callsign)
     if (!ok){
-			validation.RespondError(w, "invalid_callsign", "", http.StatusBadRequest)
+			validation.RespondError(w, "geçersiz çağrı işareti", "", http.StatusBadRequest)
 			return
     }
 
@@ -357,16 +357,16 @@ func ServeValidateCallsign(
     logger.Printf("res: %v", res)
     if err == sql.ErrNoRows {
       resp := OkResponse{
-        Ok: "ok",
+        Ok: "tamam",
       }
       validation.RespondOk(w, resp)
       return
     }else if err != nil {
-			validation.RespondError(w, "query_failed", "", http.StatusInternalServerError)
-			logger.Printf("ServeRegister: query error: %v", err.Error())
+			validation.RespondError(w, "sorgu başarısız", "", http.StatusInternalServerError)
+			logger.Printf("ServeRegister: sorgu hatası: %v", err.Error())
       return
 		}
-    validation.RespondError(w, "already_taken", "", http.StatusBadRequest)
+    validation.RespondError(w, "zaten alınmış", "", http.StatusBadRequest)
     return
 	}
 }

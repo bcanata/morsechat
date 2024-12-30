@@ -27,31 +27,31 @@ type SignedMessage struct {
 func EncryptMessage(msg SignedMessage, secretKey []byte) (string, error) {
 	plainText, err := json.Marshal(msg)
 	if err != nil {
-		return "", fmt.Errorf("failed to marshal message: %v", err)
+		return "", fmt.Errorf("mesajı serileştirme başarısız: %v", err)
 	}
 
-	// Create a new AES cipher block
+	// Yeni bir AES şifre bloğu oluşturun
 	block, err := aes.NewCipher(secretKey)
 	if err != nil {
-		return "", fmt.Errorf("failed to create cipher: %v", err)
+		return "", fmt.Errorf("şifre oluşturma başarısız: %v", err)
 	}
 
-	// Use GCM (Galois/Counter Mode) for encryption
+	// Şifreleme için GCM (Galois/Counter Mode) kullanın
 	gcm, err := cipher.NewGCM(block)
 	if err != nil {
-		return "", fmt.Errorf("failed to create GCM: %v", err)
+		return "", fmt.Errorf("GCM oluşturma başarısız: %v", err)
 	}
 
-	// Generate a random nonce
+	// Rastgele bir nonce oluşturun
 	nonce := make([]byte, gcm.NonceSize())
 	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
-		return "", fmt.Errorf("failed to generate nonce: %v", err)
+		return "", fmt.Errorf("nonce oluşturma başarısız: %v", err)
 	}
 
-	// Encrypt the plaintext and append the nonce
+	// Düz metni şifreleyin ve nonce ekleyin
 	cipherText := gcm.Seal(nonce, nonce, plainText, nil)
 
-	// Encode the ciphertext to a base64 string
+	// Şifreli metni base64 stringine kodlayın
 	return base64.StdEncoding.EncodeToString(cipherText), nil
 }
 
@@ -59,40 +59,40 @@ func EncryptMessage(msg SignedMessage, secretKey []byte) (string, error) {
 func DecryptMessage(encryptedMessage string, secretKey []byte) (SignedMessage, error) {
 	var msg SignedMessage
 
-	// Decode the base64 encoded message
+	// Base64 kodlu mesajı çöz
 	cipherText, err := base64.StdEncoding.DecodeString(encryptedMessage)
 	if err != nil {
-		return msg, fmt.Errorf("failed to decode base64 message: %v", err)
+		return msg, fmt.Errorf("base64 mesajını çözme başarısız: %v", err)
 	}
 
-	// Create a new AES cipher block
+	// Yeni bir AES şifre bloğu oluşturun
 	block, err := aes.NewCipher(secretKey)
 	if err != nil {
-		return msg, fmt.Errorf("failed to create cipher: %v", err)
+		return msg, fmt.Errorf("şifre oluşturma başarısız: %v", err)
 	}
 
-	// Use GCM (Galois/Counter Mode) for decryption
+	// Şifre çözme için GCM (Galois/Counter Mode) kullanın
 	gcm, err := cipher.NewGCM(block)
 	if err != nil {
-		return msg, fmt.Errorf("failed to create GCM: %v", err)
+		return msg, fmt.Errorf("GCM oluşturma başarısız: %v", err)
 	}
 
-	// Extract the nonce from the ciphertext
+	// Şifreli metinden nonce çıkarın
 	nonceSize := gcm.NonceSize()
 	if len(cipherText) < nonceSize {
-		return msg, fmt.Errorf("ciphertext too short")
+		return msg, fmt.Errorf("şifreli metin çok kısa")
 	}
 	nonce, cipherText := cipherText[:nonceSize], cipherText[nonceSize:]
 
-	// Decrypt the ciphertext
+	// Şifreli metni çöz
 	plainText, err := gcm.Open(nil, nonce, cipherText, nil)
 	if err != nil {
-		return msg, fmt.Errorf("failed to decrypt message: %v", err)
+		return msg, fmt.Errorf("mesajı çözme başarısız: %v", err)
 	}
 
-	// Unmarshal the JSON into the SignedMessage struct
+	// JSON'u SignedMessage yapısına serileştirin
 	if err := json.Unmarshal(plainText, &msg); err != nil {
-		return msg, fmt.Errorf("failed to unmarshal message: %v", err)
+		return msg, fmt.Errorf("mesajı serileştirme başarısız: %v", err)
 	}
 
 	return msg, nil

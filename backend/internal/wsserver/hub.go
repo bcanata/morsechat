@@ -114,7 +114,7 @@ func clientRequestMux(
 ){
 	var cmd ClientRequestCommand
 	if err := json.Unmarshal(message.bytes, &cmd); err != nil {
-    logger.Printf("WsClientRequestMux: Failed to parse json: %v\n", err)
+    logger.Printf("WsClientRequestMux: JSON ayrıştırma başarısız: %v\n", err)
 		return
 	}
 
@@ -143,7 +143,7 @@ func clientRequestMux(
       )
   default:
     logger.Printf(
-      "WsclientWsRequestMux: client %v: unknown cmd type: %s. message: %v",
+      "WsclientWsRequestMux: client %v: bilinmeyen komut türü: %s. mesaj: %v",
       message.client.userInfo.Callsign,
       cmd.Type,
       message.bytes,
@@ -270,7 +270,7 @@ func handleJoinCommand(
 ){
   var cmd CommandJoinRoom
   if err := json.Unmarshal(rawCmd, &cmd); err != nil {
-    logger.Printf("HandleJoinCommand: Failed to parse json: %v\n", err)
+    logger.Printf("HandleJoinCommand: JSON ayrıştırma başarısız: %v\n", err)
     return
   }
   channels := map[string]bool{
@@ -286,13 +286,13 @@ func handleJoinCommand(
       "presence-pro-3": true,
   }
   if _, ok := channels[cmd.Name]; !ok {
-    logger.Printf("HandleJoinCommand: invalid channel name: %v", cmd.Name)
-    MessageUserJoinerror(client, logger, "invalid channel name", cmd.Name)
+    logger.Printf("HandleJoinCommand: geçersiz kanal adı: %v", cmd.Name)
+    MessageUserJoinerror(client, logger, "geçersiz kanal adı", cmd.Name)
     return
   }
 
   if strings.Contains(cmd.Name, "pro") && client.userInfo.IsAnonymous{
-    MessageUserJoinerror(client, logger, "invalid_credentials", cmd.Name)
+    MessageUserJoinerror(client, logger, "geçersiz kimlik bilgileri", cmd.Name)
     return
   }
 
@@ -346,7 +346,7 @@ func handleTypingCommand(
 ){
   var cmd CommandTying
   if err := json.Unmarshal(rawCmd, &cmd); err != nil {
-    logger.Printf("HandleTypingCommand: Failed to parse json: %v\n", err)
+    logger.Printf("HandleTypingCommand: JSON ayrıştırma başarısız: %v\n", err)
     return
   }
   client.isTyping = cmd.Typing
@@ -376,20 +376,20 @@ func handleMorseCommand(
 ){
   var cmd CommandMorse
   if err := json.Unmarshal(rawCmd, &cmd); err != nil {
-    logger.Printf("HandleMorseCommand: Failed to parse json: %v\n", err)
+    logger.Printf("HandleMorseCommand: JSON ayrıştırma başarısız: %v\n", err)
     return
   }
 	messageText, messageDuration, isMalformed := morse.Translate(cmd.Message, cmd.Wpm)
   if isMalformed {
     //TODO; metrics
-    logger.Printf("HandleMorseCommand: malformed message:\n")
-    MessageUserMorseStatusError(client, logger, "Malformed message", "")
+    logger.Printf("HandleMorseCommand: bozuk mesaj:\n")
+    MessageUserMorseStatusError(client, logger, "Bozuk mesaj", "")
     return
   }
   isBadLanguage := morse.ContainsBadLanguage(messageText)
   if isBadLanguage{
     //TODO; metrics
-    logger.Printf("HandleMorseCommand: bad language: %v\n", messageText)
+    logger.Printf("HandleMorseCommand: kötü dil: %v\n", messageText)
   }
 
   //ratelimiting logic
@@ -405,7 +405,7 @@ func handleMorseCommand(
     // logger.Printf("DEBUG time delta: %v messageDuration: %v", delta, time.Duration(messageDuration)*time.Millisecond)
     if delta < cooldownTime || delta < time.Duration(messageDuration)*time.Millisecond{
       //TODO: metrics
-      MessageUserMorseStatusError(client, logger, "You are sending too many messages, please wait some seconds", "")
+      MessageUserMorseStatusError(client, logger, "Çok fazla mesaj gönderiyorsunuz, lütfen birkaç saniye bekleyin", "")
       return
     }
   }
@@ -451,4 +451,3 @@ func handleMorseCommand(
     MessageUser(client, msgBytes)
   }
 }
-

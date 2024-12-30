@@ -23,7 +23,7 @@ func badwordsListDecode(input string) []string {
 	return strings.Split(string(runes), "\n")
 }
 
-// Replace characters in a string based on defined rules
+// Belirli kurallara göre bir dizedeki karakterleri değiştirin
 func normalize(input string) string {
 	replacements := map[rune]rune{
 		'4': 'a', '@': 'a',
@@ -46,12 +46,12 @@ func normalize(input string) string {
 	return string(runes)
 }
 
-// return true if the input string contains spam or inappropirate language
+// Girdi dizesinin spam veya uygunsuz dil içerip içermediğini döndürür
 func ContainsBadLanguage(input string) bool {
   if len(input) < 3{
     return false
   }
-	// Replacement regex to normalize the input
+	// Girdiyi normalleştirmek için değiştirme regex'i
 	replacementPattern := regexp.MustCompile(`[ .\-_]+`)
 	input = replacementPattern.ReplaceAllString(input, "")
   input = normalize(input)

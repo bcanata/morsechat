@@ -249,11 +249,11 @@ export function AppLogic({chatDomNode}) {
             //show successfully connected message
             let last = chatDomNode.current.lastChild
             if(channelName == "training"){
-                systemMessage(chatDomNode, "connected to " + channelName + " with callsign: " + callsign)
-                systemMessage(chatDomNode, "This is a training channel. The messages that you type won't be broadcasted")
+                systemMessage(chatDomNode, "training kanalına bağlandı: " + callsign)
+                systemMessage(chatDomNode, "Bu bir eğitim kanalıdır. Yazdığınız mesajlar yayınlanmayacak")
             }else{
               if(chatDomNode.current.childElementCount == 0)
-                systemMessage(chatDomNode, "connected to " + channelName + " with callsign: " + callsign)
+                systemMessage(chatDomNode, channelName + " kanalına bağlandı: " + callsign)
             }
           }
         }

@@ -87,11 +87,11 @@ func AddRoutes(
 func serveHome(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.URL)
 	if r.URL.Path != "/" {
-		http.Error(w, "Not found", http.StatusNotFound)
+		http.Error(w, "Bulunamadı", http.StatusNotFound)
 		return
 	}
 	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		http.Error(w, "Yönteme izin verilmiyor", http.StatusMethodNotAllowed)
 		return
 	}
 	http.ServeFile(w, r, "home.html")
@@ -101,16 +101,16 @@ func serveTestCtx(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	select {
 	case <-ctx.Done():
-		log.Println("ctx done, abrupt end. reason:")
+		log.Println("ctx tamamlandı, ani son. sebep:")
 		log.Println(ctx.Err())
 		http.Error(w, ctx.Err().Error(), http.StatusInternalServerError)
 	case <-time.After(4 * time.Second):
-		log.Println("10s elapsed")
-		fmt.Fprintf(w, "10s elapsed")
+		log.Println("10 saniye geçti")
+		fmt.Fprintf(w, "10 saniye geçti")
 	}
 
 }
 
 func serveTODO(w http.ResponseWriter, r *http.Request) {
-	http.Error(w, "Api endpoint not implemented", http.StatusInternalServerError)
+	http.Error(w, "Api uç noktası uygulanmadı", http.StatusInternalServerError)
 }
