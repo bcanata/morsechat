@@ -28,12 +28,11 @@ func ServeReport(
 		}
     signedMessage, err := morse.DecryptMessage(req.Signature, config.SecretBytes)
     if err != nil{
-			validation.RespondError(w, "Processing failed", "", http.StatusInternalServerError)
-			logger.Printf("ServeReport: signature decryption failed : %v", err.Error())
+			validation.RespondError(w, "İşleme başarısız", "", http.StatusInternalServerError)
+			logger.Printf("ServeReport: imza şifre çözme başarısız : %v", err.Error())
       return
     }
-    logger.Printf("ServeReport: reported : %v", signedMessage)
-    validation.RespondOk(w, OkResponse{Ok: "ok"})
+    logger.Printf("ServeReport: bildirildi : %v", signedMessage)
+    validation.RespondOk(w, OkResponse{Ok: "tamam"})
   }
 }
-

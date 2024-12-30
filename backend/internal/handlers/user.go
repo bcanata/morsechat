@@ -37,8 +37,8 @@ func ServeUserInfo(
 		res, err := queries.GetUser(r.Context(), req.Username)
 
 		if err != nil {
-			validation.RespondError(w, "Query failed", "", http.StatusInternalServerError)
-			logger.Printf("ServeUserInfo: query error: %v", err.Error())
+			validation.RespondError(w, "Sorgu başarısız", "", http.StatusInternalServerError)
+			logger.Printf("ServeUserInfo: sorgu hatası: %v", err.Error())
       return
 		}
 
@@ -60,8 +60,8 @@ func ServeMe(
 
 		jwtData, err := auth.GetJwtData(r.Context())
 		if err != nil {
-			validation.RespondError(w, "session error", "", http.StatusInternalServerError)
-			logger.Printf("ServeRegister: jwt data error: %v", err.Error())
+			validation.RespondError(w, "Oturum hatası", "", http.StatusInternalServerError)
+			logger.Printf("ServeRegister: jwt veri hatası: %v", err.Error())
       return
 		}
 
@@ -69,8 +69,8 @@ func ServeMe(
 		res, err := queries.GetUserFromId(r.Context(), jwtData.UserId)
 
 		if err != nil {
-			validation.RespondError(w, "Query failed", "", http.StatusInternalServerError)
-			logger.Printf("ServeMe: query error: %v", err.Error())
+			validation.RespondError(w, "Sorgu başarısız", "", http.StatusInternalServerError)
+			logger.Printf("ServeMe: sorgu hatası: %v", err.Error())
       return
 		}
 
@@ -101,8 +101,8 @@ func ServeUpdateSettings(
 
 		currentJwtData, err := auth.GetJwtData(r.Context())
 		if err != nil{
-			logger.Printf("ServeUpdateSettings: session error: %v", err.Error())
-			validation.RespondError(w, "Session error", "", http.StatusInternalServerError)
+			logger.Printf("ServeUpdateSettings: oturum hatası: %v", err.Error())
+			validation.RespondError(w, "Oturum hatası", "", http.StatusInternalServerError)
 			return
     }
     
@@ -112,12 +112,12 @@ func ServeUpdateSettings(
       Settings: string(encodedConfig),
     })
 		if err != nil {
-			validation.RespondError(w, "Query failed", "", http.StatusInternalServerError)
-			logger.Printf("ServeUpdateSettings: query error: %v", err.Error())
+			validation.RespondError(w, "Sorgu başarısız", "", http.StatusInternalServerError)
+			logger.Printf("ServeUpdateSettings: sorgu hatası: %v", err.Error())
       return
 		}
       resp := OkResponse{
-        Ok: "ok",
+        Ok: "tamam",
       }
       validation.RespondOk(w, resp)
   }

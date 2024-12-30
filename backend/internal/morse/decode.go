@@ -80,11 +80,11 @@ func Translate(keyTimes []int, wpm int) (decodedMessage string, timeLength int, 
 
 	for i, time := range keyTimes {
     if time <= 0 || time > 6000 {
-      //The message is malformed, no reason to keep parsing
+      //Mesaj bozuk, bu yüzden ayrıştırmaya devam etmenin bir anlamı yok
       return "", timeLength, true
     }
     timeLength += time
-		if i%2 == 0 { // Sound segment
+		if i%2 == 0 { // Ses segmenti
       if timeLength > maxTime {
         break
       }
@@ -93,7 +93,7 @@ func Translate(keyTimes []int, wpm int) (decodedMessage string, timeLength int, 
 			} else {
 				currentSymbol.WriteByte('-')
 			}
-		} else { // Silence segment
+		} else { // Sessizlik segmenti
 			switch {
 			case time >= longSilence:
 				decoded.WriteString(morseCodeMap[currentSymbol.String()])
@@ -103,16 +103,15 @@ func Translate(keyTimes []int, wpm int) (decodedMessage string, timeLength int, 
 				decoded.WriteString(morseCodeMap[currentSymbol.String()])
 				currentSymbol.Reset()
 			case time >= shortSilence:
-				// Inter-element space, do nothing
+				// Elemanlar arası boşluk, hiçbir şey yapma
 			}
 		}
 	}
 
-	// Decode remaining symbol
+	// Kalan sembolü çöz
 	if currentSymbol.Len() > 0 {
 		decoded.WriteString(morseCodeMap[currentSymbol.String()])
 	}
 
 	return decoded.String(), timeLength, false
 }
-

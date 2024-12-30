@@ -101,18 +101,18 @@ function CountdownPreview({emptyBuffer, chatDomNode}){
         let msg = ""
         //handle error messages
         if(err.error === "too_many_requests"){
-          msg = "You are sending too many messages, please wait some seconds"
+          msg = "Çok fazla mesaj gönderiyorsunuz, lütfen birkaç saniye bekleyin"
         }
         else if(err.error === "invalid_message"){
-          msg = "You may be using an old version of the website. Try refreshing the page"
+          msg = "Web sitesinin eski bir sürümünü kullanıyor olabilirsiniz. Sayfayı yenilemeyi deneyin"
         }
         else if(err.error === "unauthorized"){
-          msg = "Your session may have expired. Try refreshing the page"
+          msg = "Oturumunuzun süresi dolmuş olabilir. Sayfayı yenilemeyi deneyin"
         }
         else{
           msg = err.error + " " + err.details
         }
-        systemMessage(chatDomNode, "broadcast failed. " + msg)
+        systemMessage(chatDomNode, "yayın başarısız oldu. " + msg)
       }
       else if(res.training){
         ////
