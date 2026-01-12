@@ -19,13 +19,38 @@ func GenerateAnonCallsign(country string) (callsign string, err error) {
 
 // receives a callsign, and parses it.
 // If it's in a valid format, returns ok and the associated country code.
-// Valid format: US12ABC
-//
-//	--        2-letter ISO 3166-1 alpha-2 country code
-//	  --      2 numbers
-//	     --   3 letters
+// Valid formats:
+//   - US12ABC (international): 2-letter ISO 3166-1 alpha-2 country code + 2 numbers + 3 letters
+//   - TA0ABC or TB0ABC (Turkish): TA or TB prefix + 1 digit + 1-3 letters
 func ParseCallsign(callsign string) (countryCode string, ok bool) {
-	// Check if the callsign is the correct length
+	// Check for Turkish callsign format (TA/TB + 1 digit + 1-3 letters, length 4-6)
+	if len(callsign) >= 4 && len(callsign) <= 6 {
+		prefix := callsign[:2]
+		if prefix == "TA" || prefix == "TB" {
+			// Extract components
+			digit := callsign[2:3]
+			letters := callsign[3:]
+
+			// Validate the digit
+			if !unicode.IsDigit(rune(digit[0])) {
+				return "", false
+			}
+
+			// Validate the letters (must be 1-3 uppercase letters)
+			if len(letters) < 1 || len(letters) > 3 {
+				return "", false
+			}
+			for _, r := range letters {
+				if !unicode.IsLetter(r) || !unicode.IsUpper(r) {
+					return "", false
+				}
+			}
+
+			return "TR", true
+		}
+	}
+
+	// International format: exactly 7 characters
 	if len(callsign) != 7 {
 		return "", false
 	}

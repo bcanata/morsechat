@@ -30,6 +30,10 @@ function SimpleEditor(props){
     const allValid = modulesData.every(m => {
       if(m.hasOwnProperty('len') && m.len != m.value.length)
         return false
+      if(m.hasOwnProperty('minLen') && m.hasOwnProperty('maxLen')) {
+        if(m.value.length < m.minLen || m.value.length > m.maxLen)
+          return false
+      }
       if(m.hasOwnProperty('ecmaPattern') && !(new RegExp(m.ecmaPattern)).test(m.value))
         return false
       return true
@@ -136,26 +140,53 @@ function SimpleEditor(props){
 const CallSignEditor = (props) =>{
   const country = useSelector(state => state.user.country)
   //TODO: replace this hardcoded data with data received from the apis
-  const [schema, setSchema] = React.useState([
-    {
-      module: 'country',
-      value: country
-    },
-    {
-      module: 'text',
-      value: '',
-      len: 2,
-      ecmaPattern: '^[0-9]*$',
-      description: "2 numbers"
-    },
-    {
-      module: 'text',
-      value: '',
-      len: 3,
-      ecmaPattern: '^[A-Za-z]*$',
-      description: "3 letters"
-    },
-  ]);
+  const [schema, setSchema] = React.useState(() => {
+    // Turkish callsign format: TA/TB + 1 digit + 1-3 letters
+    if (country === 'TA' || country === 'TB') {
+      return [
+        {
+          module: 'country',
+          value: country
+        },
+        {
+          module: 'text',
+          value: '',
+          len: 1,
+          ecmaPattern: '^[0-9]*$',
+          description: "1 digit"
+        },
+        {
+          module: 'text',
+          value: '',
+          minLen: 1,
+          maxLen: 3,
+          ecmaPattern: '^[A-Za-z]*$',
+          description: "1-3 letters"
+        },
+      ]
+    }
+    // International format: CC + 2 digits + 3 letters
+    return [
+      {
+        module: 'country',
+        value: country
+      },
+      {
+        module: 'text',
+        value: '',
+        len: 2,
+        ecmaPattern: '^[0-9]*$',
+        description: "2 numbers"
+      },
+      {
+        module: 'text',
+        value: '',
+        len: 3,
+        ecmaPattern: '^[A-Za-z]*$',
+        description: "3 letters"
+      },
+    ]
+  });
   const [schemaCode,  setSchemaCode] = React.useState("mrse_default")
 
   function handleSetData(data){

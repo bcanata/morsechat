@@ -4,7 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import {TextField} from '@mui/material';
 
-import countryCodes from './countryCodes';
+import countryCodes, { customLabels } from './countryCodes';
 
 function ModuleCountrySelector(props) {
  const country = props.value
@@ -15,6 +15,10 @@ function ModuleCountrySelector(props) {
 
   //browser-only feature
   function countryCodeName(countryCode){
+    // Use custom labels for Turkish amateur radio prefixes
+    if (customLabels[countryCode]) {
+      return customLabels[countryCode]
+    }
     const regionNamesInEnglish = new Intl.DisplayNames(['en'], { type: 'region' })
     if(countryCode)
       return regionNamesInEnglish.of(countryCode)
@@ -38,10 +42,16 @@ function ModuleCountrySelector(props) {
 
 function ModuleText(props){
   const re = new RegExp(props.ecmaPattern)
-  const completelyValid = props.value.length == props.len && re.test(props.value)
+  // Support both fixed length and variable length (minLen to maxLen) validation
+  const completelyValid = props.hasOwnProperty('len')
+    ? props.value.length == props.len && re.test(props.value)
+    : props.hasOwnProperty('minLen') && props.hasOwnProperty('maxLen')
+      ? props.value.length >= props.minLen && props.value.length <= props.maxLen && re.test(props.value)
+      : re.test(props.value)
   const handleChange = (event) => {
     let v = event.target.value
-    if(v.length <= props.len && re.test(v))
+    const maxLength = props.len || props.maxLen || Infinity
+    if(v.length <= maxLength && re.test(v))
     props.update(v.toUpperCase())
   }
   return (
