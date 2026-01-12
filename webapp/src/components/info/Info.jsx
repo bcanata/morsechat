@@ -9,13 +9,11 @@ export function Info({className="", ...props}) {
     return (
         <div className={`${styles.info} ${className}`} >
             <h3>Morsechat</h3>
-            <p>This is an online morsecode chat</p>
-            <p>Press the spacebar or the key below to transmit a dot, hold it to
-                transmit a dash
+            <p>Bu, çevrimiçi bir morse kodu sohbetidir</p>
+            <p>Nokta göndermek için boşluk tuşuna veya aşağıdaki tuşa basın, çizgi göndermek için basılı tutun
             </p>
             <p>
-                Join the discord community
-                for help, or to participate on the development.
+                Yardım almak veya geliştirmeye katılmak için discord topluluğuna katılın
             </p>
             <a href="https://discord.gg/JPzfzNJG6e" title="discord">
                 <img src={discordUrl}/>

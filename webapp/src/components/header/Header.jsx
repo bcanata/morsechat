@@ -63,7 +63,7 @@ export function Header({ leftContent = "", authState }) {
                       startIcon={<ShieldIcon />}
                       onClick={handleModerationOpen}
                   >
-                      Moderation
+                      Denetim
                   </Button>
                 }
 
@@ -88,13 +88,13 @@ export function Header({ leftContent = "", authState }) {
                         <ListItemIcon>
                             <AccountCircleIcon fontSize="small" />
                         </ListItemIcon>
-                        View Profile
+                        Profili Görüntüle
                     </MenuItem>
                     <MenuItem onClick={logoutHandler}>
                         <ListItemIcon>
                             <Logout fontSize="small" />
                         </ListItemIcon>
-                        Logout
+                        Çıkış Yap
                     </MenuItem>
                 </Menu>
 
@@ -104,7 +104,7 @@ export function Header({ leftContent = "", authState }) {
                     elevation: 0,
                   }}>
                     <DialogTitle sx={{ m: 0, p: 2 }}>
-                        Moderation Menu
+                        Denetim Menüsü
                         <IconButton
                             aria-label="close"
                             onClick={handleModerationClose}
@@ -125,8 +125,8 @@ export function Header({ leftContent = "", authState }) {
             </>
         ) : (
             <>
-                <Button onClick={setAuthPageClick("login")}>Login</Button>
-                <Button variant="outlined" size="small" onClick={setAuthPageClick("register")}>Register</Button>
+                <Button onClick={setAuthPageClick("login")}>Giriş Yap</Button>
+                <Button variant="outlined" size="small" onClick={setAuthPageClick("register")}>Kayıt Ol</Button>
             </>
         );
     }

@@ -136,7 +136,7 @@ export function AppLayout({chatDomNode}) {
                                 <Button size="small" startIcon={<SettingsIcon />}
                                     onClick={() => setSettingsOpen(t => !t)}
                                     variant="outlined">
-                                    Advanced
+                                    Gelişmiş
                                 </Button>
                             }
                         />
@@ -147,7 +147,7 @@ export function AppLayout({chatDomNode}) {
                 <Key className='grid-key'
                     leftButton={
                         tablet ? undefined :
-                            <IconButton aria-label="Settings" 
+                            <IconButton aria-label="Ayarlar"
                                 onClick={()=> setSettingsOpen(t => !t)}>
                                 <SettingsIcon />
                             </IconButton>

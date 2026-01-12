@@ -27,18 +27,17 @@ export const MainIndexForm = ({setPage}) => {
                         Morsechat
                     </Typography>
                     <p>
-                    This is an online morse code chat.<br />
-                    Join to practice and communicate in real time with hundreds of
-                    users from all over the world without having to buy a radio
+                    Bu, çevrimiçi bir morse kodu sohbetidir.<br />
+                    Telsiz satın almak zorunda kalmadan, tüm dünyadan yüzlerce kullanıcıyla gerçek zamanlı olarak pratik yapmak ve iletişim kurmak için katılın
                     </p>
                     <p>
-Press space or the key at the bottom of the page to transmit a dot, hold it to transmit a dash
+Nokta göndermek için boşluk tuşuna veya sayfanın altındaki tuşa basın, çizgi göndermek için basılı tutun
                     </p>
                 </Grid>
                 <Grid item xs={12}>
                     <Stack direction="row" sx={{ padding: "10px" }} alignItems="center" spacing={1}>
-                        <Button variant="outlined" size="small" onClick={e => setPage("register")}>Register</Button>
-                        <Button size="small" onClick={e => setPage("login")}>Login</Button>
+                        <Button variant="outlined" size="small" onClick={e => setPage("register")}>Kayıt Ol</Button>
+                        <Button size="small" onClick={e => setPage("login")}>Giriş Yap</Button>
                     </Stack>
                 </Grid>
                 <Grid item xs={12}>
@@ -46,7 +45,7 @@ Press space or the key at the bottom of the page to transmit a dot, hold it to t
                 </Grid>
                 <Grid item xs={12}>
                     <Button size="medium" variant="contained" onClick={e => setPage("")}>
-                        Join anonimously
+                        Anonim katıl
                     </Button>
                 </Grid>
             </Grid>

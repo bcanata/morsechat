@@ -19,18 +19,18 @@ const ManualBanForm = () => {
   return (
     <Paper elevation={0} sx={{ p: 3, maxWidth: 900, minWidth: 700 }}>
       <Typography variant="h6" gutterBottom>
-        Manual ban
+        Manuel yasaklama
       </Typography>
       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexDirection: 'row' }}>
           <TextField
-            label="Username"
+            label="Kullanıcı Adı"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             fullWidth
             required
           />
           <TextField
-            label="Device ID"
+            label="Cihaz Kimliği"
             value={deviceId}
             onChange={(e) => setDeviceId(e.target.value)}
             fullWidth
@@ -45,7 +45,7 @@ const ManualBanForm = () => {
                 color="primary"
               />
             }
-            label="Revert Ban"
+            label="Yasağı Geri Al"
           />
           <BanButton
             sx={{flexShrink: 0}}
@@ -57,7 +57,7 @@ const ManualBanForm = () => {
             session={deviceId}
             revert={revert}
           >
-            {revert ? 'Revert Ban' : 'Ban'}
+            {revert ? 'Yasağı Geri Al' : 'Yasakla'}
           </BanButton>
       </Box>
     </Paper>

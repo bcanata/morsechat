@@ -21,7 +21,7 @@ export function ReportMessage({ open, onClose, data }) {
   const dispatch = useDispatch()
   async function handleReport(){
     if(!data || !data.text || !data.signature){
-      let error = "Failed to generate report"
+      let error = "Rapor oluşturulamadı"
       enqueueSnackbar(error, {variant: "error", preventDuplicate:true})
       return
     }
@@ -34,12 +34,12 @@ export function ReportMessage({ open, onClose, data }) {
       .unwrap()
     }
     catch(e){
-      let error = "Report failed: " + e.error
+      let error = "Bildirme başarısız oldu: " + e.error
       enqueueSnackbar(error, {variant: "error", preventDuplicate:true})
       setBtDisabled(false)
       return
     }
-    enqueueSnackbar("Message reported", {variant: "success", preventDuplicate:true})
+    enqueueSnackbar("Mesaj bildirildi", {variant: "success", preventDuplicate:true})
     onClose()
     setReported(true)
     setBtDisabled(false)
@@ -56,19 +56,19 @@ export function ReportMessage({ open, onClose, data }) {
       <DialogTitle>
           <IconButton aria-label="close" color="primary" onClick={onClose}>
             <CloseIcon />
-          </IconButton> Report Message
+          </IconButton> Mesajı Bildir
       </DialogTitle>
       <DialogContent>
         <div >
-          <p> Do you believe this message is spam or contains inappropriate content? </p>
+          <p> Bu mesajın spam olduğunu veya uygunsuz içerik içerdiğini düşünüyor musunuz? </p>
           <code>{data?.text}</code>
 
         </div>
 
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleReport} disabled={btDisabled} color="error" variant="contained">Report</Button>
-        <Button onClick={onClose} color="primary" variant="contained">Close</Button>
+        <Button onClick={handleReport} disabled={btDisabled} color="error" variant="contained">Bildir</Button>
+        <Button onClick={onClose} color="primary" variant="contained">Kapat</Button>
 
       </DialogActions>
     </Dialog>

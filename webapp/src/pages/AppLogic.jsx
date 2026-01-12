@@ -300,17 +300,17 @@ export function AppLogic({ chatDomNode }) {
 				if (channelName == "training") {
 					systemMessage(
 						chatDomNode,
-						"connected to " + channelName + " with callsign: " + callsign,
+						channelName + " kanalına çağrı işareti ile bağlandı: " + callsign,
 					);
 					systemMessage(
 						chatDomNode,
-						"This is a training channel. The messages that you type won't be broadcasted",
+						"Bu bir eğitim kanalıdır. Yazdığınız mesajlar yayınlanmayacak",
 					);
 				} else {
 					if (chatDomNode.current.childElementCount == 0)
 						systemMessage(
 							chatDomNode,
-							"connected to " + channelName + " with callsign: " + callsign,
+							channelName + " kanalına çağrı işareti ile bağlandı: " + callsign,
 						);
 				}
 			};

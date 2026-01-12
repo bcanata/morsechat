@@ -45,13 +45,13 @@ export const BanUserDialog = () => {
     livePromise.unwrap()
       .then(ret => {
         console.log(ret)
-        let actionName = revert ? "ban REVERT successfull." : "ban succesfful"
+        let actionName = revert ? "yasaklama GERİ ALINDI başarılı." : "yasaklama başarılı"
         enqueueSnackbar(actionName, {variant: "success", preventDuplicate:true})
         dispatch(closeDialog());
       })
       .catch(ret => {
         console.log(ret)
-        let actionName = revert ? "ban REVERT failed." : "ban failed"
+        let actionName = revert ? "yasaklama GERİ ALMA başarısız." : "yasaklama başarısız"
       enqueueSnackbar(actionName, {variant: "error", preventDuplicate:true})
       dispatch(closeDialog());
       })
@@ -63,12 +63,12 @@ export const BanUserDialog = () => {
     }
   }, [])
 
-  const title = revert ? 'Revert Ban' : 'Ban User';
-  const actionLabel = revert ? 'Revert Ban' : 'Ban';
-  const displayUser = username ? `user "${username}"` : "this anonymous user"
+  const title = revert ? 'Yasağı Geri Al' : 'Kullanıcıyı Yasakla';
+  const actionLabel = revert ? 'Yasağı Geri Al' : 'Yasakla';
+  const displayUser = username ? `kullanıcı "${username}"` : "bu anonim kullanıcı"
   const description = revert
-    ? `Are you sure you want to REVERT the ban on ${displayUser}?`
-    : `Are you sure you want to BAN ${displayUser}?`;
+    ? `${displayUser} için yasağı GERİ ALMAK istediğinizden emin misiniz?`
+    : `${displayUser} için YASAKLAMAK istediğinizden emin misiniz?`;
 
   return (
     <Dialog open={open} onClose={() => dispatch(closeDialog())} maxWidth="sm" fullWidth>
@@ -76,15 +76,15 @@ export const BanUserDialog = () => {
       <DialogContent>
         <Stack spacing={2}>
           <Typography>{description}</Typography>
-          {session && 
-            <Typography>User device: {session}</Typography>
+          {session &&
+            <Typography>Kullanıcı cihazı: {session}</Typography>
           }
           <TextField
             multiline
             minRows={3}
             fullWidth
-            label="Moderator Notes"
-            placeholder="Write your reason or notes here..."
+            label="Denetçi Notları"
+            placeholder="Gerekçe veya notlarınızı buraya yazın..."
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             required
@@ -92,7 +92,7 @@ export const BanUserDialog = () => {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => dispatch(closeDialog())}>Cancel</Button>
+        <Button onClick={() => dispatch(closeDialog())}>İptal</Button>
         <Button
           color={revert ? 'primary' : 'error'}
           variant="contained"

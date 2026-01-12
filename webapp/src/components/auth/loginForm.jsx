@@ -45,17 +45,17 @@ const LoginForm = ({setPage}) =>{
     let isGood = true
     //username length
     if(form.username.length <3 || form.username.length > 20){
-      setError('username', 'invalid length')
+      setError('username', 'geçersiz uzunluk')
       isGood = false
     }
     //username content
     else if(!/^[A-Za-z0-9-_]+$/.test(form.username)){
-      setError('username', 'invalid characters')
+      setError('username', 'geçersiz karakterler')
       isGood = false
     }
     //password length
     if(form.password.length <8 || form.password.length > 255){
-      setError('password', 'too short')
+      setError('password', 'çok kısa')
       isGood = false
     }
     return isGood
@@ -71,12 +71,12 @@ const LoginForm = ({setPage}) =>{
     }
     catch (res) {
       if (res.error == "invalid_credentials") {
-        enqueueSnackbar('wrong username or password', { variant: "error", preventDuplicate: true })
+        enqueueSnackbar('yanlış kullanıcı adı veya şifre', { variant: "error", preventDuplicate: true })
         setError('username', ' ')
         setError('password', ' ')
       }
       else
-        enqueueSnackbar(`registration failed. ${res.error} ${res.details ?? ''}`, { variant: "error", preventDuplicate: true })
+        enqueueSnackbar(`kayıt başarısız oldu. ${res.error} ${res.details ?? ''}`, { variant: "error", preventDuplicate: true })
     }
   }
 
@@ -91,34 +91,34 @@ const LoginForm = ({setPage}) =>{
       </Grid>
       <Grid item xs={12} >
         <Typography variant="h5" color="primary" >
-          Login
+          Giriş Yap
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <TextField label="Username" type="text" value={form.username}
+        <TextField label="Kullanıcı Adı" type="text" value={form.username}
           onChange={handleUpdate('username')} fullWidth variant="standard"
           error={error.username.length > 0} helperText={error.username.trim()} />
       </Grid>
       <Grid item xs={12}>
-        <TextField label="password" type="password" value={form.password}
+        <TextField label="Şifre" type="password" value={form.password}
           onChange={handleUpdate('password')} fullWidth variant="standard"
           error={error.password.length > 0} helperText={error.password.trim()} />
       </Grid>
       <Grid item xs={12} >
         <Stack direction="row" sx={{ padding: "10px" }} alignItems="center" spacing={1}>
           <Button size="medium" color="secondary" type="submit" variant="contained">
-            Login
+            Giriş Yap
           </Button>
 
           <Typography variant="body1" color="primary" >
-            Don't have an account?
+            Hesabınız yok mu?
           </Typography>
           <Link
             component="button"
             variant="body1"
             onClick={() => { setPage("register") }}
           >
-            register
+            kayıt ol
           </Link>
 
         </Stack>

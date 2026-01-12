@@ -55,7 +55,7 @@ export function Chat({className = "", chatDomNode}) {
     function reload(){
         dispatch(fetchAllData()).unwrap()
         .catch(e => {
-            let error = "Loading failed again"
+            let error = "Yükleme tekrar başarısız oldu"
             enqueueSnackbar(error, {variant: "error", preventDuplicate:true})
         })
     }
@@ -65,32 +65,32 @@ export function Chat({className = "", chatDomNode}) {
         body = <div className={styles.loading}>
             <h2>Error: {error}</h2>
             <Button onClick={e => reload()} variant="outlined" color="error">
-                retry
+                tekrar dene
             </Button>
         </div>
     }
     else if(loading){
         body = <div className={styles.loading}>
-            <h2>loading</h2>
+            <h2>yükleniyor</h2>
         </div>
     }
     else if(connectionStatus == "connection denied"){
         body = <div className={styles.info}>
-            <h2>Connection denied</h2>
-            <p>This channel is for logged users only</p>
+            <h2>Bağlantı reddedildi</h2>
+            <p>Bu kanal sadece kayıtlı kullanıcılar içindir</p>
         </div>
     }
     else if(connectionStatus == "connection busy"){
         body = <div className={styles.info}>
-            <h2>Channel busy</h2>
-            <p>There are too many users connected to this channel</p>
-            <p>Come back later, or <a href={"/?channel="+randomChannel}>join another channel</a></p>
+            <h2>Kanal meşgul</h2>
+            <p>Bu kanala çok fazla kullanıcı bağlı</p>
+            <p>Daha sonra tekrar gelin veya <a href={"/?channel="+randomChannel}>başka bir kanala katılın</a></p>
         </div>
     }
     else if(connectionStatus == "connection failed"){
         body = <div className={styles.info}>
-            <h2>Connection failed</h2>
-            <p>The connection to this channel failed</p>
+            <h2>Bağlantı başarısız oldu</h2>
+            <p>Bu kanala bağlantı başarısız oldu</p>
         </div>
     }
     else{

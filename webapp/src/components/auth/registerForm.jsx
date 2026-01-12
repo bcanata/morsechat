@@ -58,22 +58,22 @@ const RegisterForm = ({setPage}) =>{
     let isGood = true
     //username length
     if(form.username.length <3 || form.username.length > 20){
-      setError('username', 'invalid length')
+      setError('username', 'geçersiz uzunluk')
       isGood = false
     }
     //username content
     else if(!/^[A-Za-z0-9-_]+$/.test(form.username)){
-      setError('username', 'invalid characters')
+      setError('username', 'geçersiz karakterler')
       isGood = false
     }
     //password length
     if(form.password.length <8 || form.password.length > 255){
-      setError('password', 'too short')
+      setError('password', 'çok kısa')
       isGood = false
     }
     //password dumbness
     else if(passwordIsDumb()){
-      setError('password', 'too dumb')
+      setError('password', 'çok zayıf')
       isGood = false
     }
     //valid callsign
@@ -95,13 +95,13 @@ const RegisterForm = ({setPage}) =>{
     }
     catch(res){
       if(res.error == "invalid_username")
-        setError('username', 'invalid username')
+        setError('username', 'geçersiz kullanıcı adı')
       else if(res.error == "username_taken")
-        setError('username', 'username already registered')
+        setError('username', 'kullanıcı adı zaten kayıtlı')
       else if(res.error == "callsign_taken")
-        enqueueSnackbar('callsign already taken', {variant: "error", preventDuplicate:true})
+        enqueueSnackbar('çağrı işareti zaten alınmış', {variant: "error", preventDuplicate:true})
       else
-        enqueueSnackbar(`registration failed. ${res.error} ${res.details ?? ''}`, {variant: "error", preventDuplicate:true})
+        enqueueSnackbar(`kayıt başarısız oldu. ${res.error} ${res.details ?? ''}`, {variant: "error", preventDuplicate:true})
     }
   }
 
@@ -115,7 +115,7 @@ const RegisterForm = ({setPage}) =>{
         </Grid>
         <Grid item xs={12} >
           <Typography variant="h5" color="primary" >
-            Create your call sign
+            Çağrı işaretinizi oluşturun
           </Typography>
         </Grid>
         <Grid item xs={12} >
@@ -126,34 +126,34 @@ const RegisterForm = ({setPage}) =>{
         </Grid>
         <Grid item xs={12} >
           <Typography variant="h5" color="primary" >
-            your data
+            verileriniz
           </Typography>
         </Grid>
         <Grid item xs={12} md={6}>
-          <TextField label="Username" type="text" value={form.username}
+          <TextField label="Kullanıcı Adı" type="text" value={form.username}
             onChange={handleUpdate('username')} fullWidth variant="standard"
             error={error.username.length > 0} helperText={error.username} />
         </Grid>
         <Grid item xs={12} md={6} >
-          <TextField label="password" type="password" value={form.password}
+          <TextField label="Şifre" type="password" value={form.password}
             onChange={handleUpdate('password')} fullWidth variant="standard"
             error={error.password.length > 0} helperText={error.password} />
         </Grid>
         <Grid item xs={12} >
           <Stack direction="row" sx={{ padding: "10px" }} alignItems="center" spacing={1}>
             <Button size="medium" type="submit" color="secondary" variant="contained">
-              Register
+              Kayıt Ol
             </Button>
 
             <Typography variant="body1" color="primary" >
-              Already have an account?
+              Zaten bir hesabınız var mı?
             </Typography>
             <Link
               component="button"
               variant="body1"
               onClick={() => { setPage("login") }}
             >
-              login
+              giriş yap
             </Link>
           </Stack>
         </Grid>

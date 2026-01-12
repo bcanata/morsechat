@@ -62,7 +62,7 @@ export function SideControls({ className = "", settingsButton = "" }) {
 
 	return (
 		<div className={`${styles.controls} ${className}`}>
-			<h2>Controls</h2>
+			<h2>Kontroller</h2>
 			<p>wpm</p>
 			<MemoSlider
 				size="small"
@@ -74,7 +74,7 @@ export function SideControls({ className = "", settingsButton = "" }) {
 				onChangeCommitted={React.useCallback((e, v) => update({ wpm: v }), [])}
 			/>
 
-			<p>receiver volume</p>
+			<p>alıcı sesi</p>
 			<MemoSlider
 				size="small"
 				value={settings.volume_receiver}
@@ -86,7 +86,7 @@ export function SideControls({ className = "", settingsButton = "" }) {
 				)}
 			/>
 
-			<p>key volume</p>
+			<p>tuş sesi</p>
 			<MemoSlider
 				size="small"
 				value={settings.volume_key}
@@ -99,7 +99,7 @@ export function SideControls({ className = "", settingsButton = "" }) {
 			/>
 
 			<div>
-				<p>show letters</p>
+				<p>harfleri göster</p>
 				<MemoSwitch
 					checked={settings.show_readable}
 					color="secondary"
@@ -123,8 +123,8 @@ export function AdvancedControls({ className = "" }) {
 	}
 	return (
 		<div className={`${styles.controls} ${className}`}>
-			<h2>Advanced settings</h2>
-			<p>submit delay</p>
+			<h2>Gelişmiş ayarlar</h2>
+			<p>gönderme gecikmesi</p>
 			<MemoSlider
 				size="small"
 				value={settings.submit_delay}
@@ -137,7 +137,7 @@ export function AdvancedControls({ className = "" }) {
 					[],
 				)}
 			/>
-			<p>key frequency</p>
+			<p>tuş frekansı</p>
 			<MemoSlider
 				size="small"
 				value={settings.key_frequency}
@@ -150,7 +150,7 @@ export function AdvancedControls({ className = "" }) {
 					[],
 				)}
 			/>
-			<p>key mode</p>
+			<p>tuş modu</p>
 			<RadioGroup
 				row
 				aria-labelledby="demo-controlled-radio-buttons-group"
@@ -161,13 +161,13 @@ export function AdvancedControls({ className = "" }) {
 				<FormControlLabel
 					value="straight"
 					control={<Radio />}
-					label="straight"
+					label="düz"
 				/>
 				<FormControlLabel value="yambic" control={<Radio />} label="iambic A" />
 			</RadioGroup>
-			<p style={{ marginTop: "1rem" }}>iambic paddle order</p>
+			<p style={{ marginTop: "1rem" }}>iambik ped sırası</p>
 			<div>
-				<p>left is dit</p>
+				<p>sol kısa</p>
 				<MemoSwitch
 					checked={!settings.left_is_dot}
 					color="primary"
@@ -176,7 +176,7 @@ export function AdvancedControls({ className = "" }) {
 						[],
 					)}
 				/>
-				<p>right is dit</p>
+				<p>sağ kısa</p>
 			</div>
 		</div>
 	);
@@ -185,10 +185,10 @@ export function AdvancedControls({ className = "" }) {
 export function KeybindingsControls({ className }) {
 	return (
 		<div className={`${styles.controls} ${styles.keybindings} ${className}`}>
-			<h2>Keybindings</h2>
-			<p>straight key SPACE, C</p>
-			<p>left paddle Z</p>
-			<p>right paddle X</p>
+			<h2>Tuş Atamaları</h2>
+			<p>düz tuş BOŞLUK, C</p>
+			<p>sol ped Z</p>
+			<p>sağ ped X</p>
 		</div>
 	);
 }

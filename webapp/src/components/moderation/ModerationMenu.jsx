@@ -90,7 +90,7 @@ export default function ModerationMenu() {
                     sx={{ width: 300 }}
                     fullWidth
                     variant="outlined"
-                    label="Search..."
+                    label="Ara..."
                     size="small"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -100,25 +100,25 @@ export default function ModerationMenu() {
                     <CircularProgress size="30px" />
                   )}
                   {loading == loadingStates.ERROR && (
-                    <p>Loading error</p>
+                    <p>Yükleme hatası</p>
                   )}
                   {loading == loadingStates.DONE && (
                     <p>{(
-                    modData.users.length + 
+                    modData.users.length +
                     modData.anon_users.length +
                     modData.ban_actions.length +
                     modData.report_actions.length
-                  )} results</p>
+                  )} sonuç</p>
                   )}
                 </Box>
             </Box>
 
             {/* Tabs */}
             <Tabs value={tabIndex} onChange={handleTabChange}>
-                <Tab label="Moderation Logs" />
-                <Tab label="Banned users" />
-                <Tab label="Reports" />
-                <Tab label="Manual operations" />
+                <Tab label="Denetim Kayıtları" />
+                <Tab label="Yasaklı Kullanıcılar" />
+                <Tab label="Bildirimler" />
+                <Tab label="Manuel İşlemler" />
             </Tabs>
 
             {/* Moderation Logs Tab */}
@@ -127,11 +127,11 @@ export default function ModerationMenu() {
                     <Table size="small" >
                         <TableHead>
                             <TableRow>
-                                <TableCell>Date & Time</TableCell>
-                                <TableCell>Info</TableCell>
-                                <TableCell>Action</TableCell>
-                                <TableCell>User</TableCell>
-                                <TableCell>Device</TableCell>
+                                <TableCell>Tarih ve Saat</TableCell>
+                                <TableCell>Bilgi</TableCell>
+                                <TableCell>İşlem</TableCell>
+                                <TableCell>Kullanıcı</TableCell>
+                                <TableCell>Cihaz</TableCell>
                             </TableRow>
                         </TableHead>
                         <BanActionsTable data={modData?.ban_actions} />
@@ -146,12 +146,12 @@ export default function ModerationMenu() {
                         <TableHead>
                             <TableRow>
                                 {/*this table will contain both the content of users and anon_users*/}
-                                <TableCell>Callsign</TableCell>
-                                <TableCell>Country</TableCell>
-                                <TableCell>Verified</TableCell>
-                                <TableCell>Username</TableCell>
-                                <TableCell>Device</TableCell>
-                                <TableCell>Actions</TableCell>
+                                <TableCell>Çağrı İşareti</TableCell>
+                                <TableCell>Ülke</TableCell>
+                                <TableCell>Doğrulanmış</TableCell>
+                                <TableCell>Kullanıcı Adı</TableCell>
+                                <TableCell>Cihaz</TableCell>
+                                <TableCell>İşlemler</TableCell>
                             </TableRow>
                         </TableHead>
                         <UsersTable data={{users: modData.users, anon_users: modData.anon_users}} />
@@ -165,15 +165,15 @@ export default function ModerationMenu() {
                     <Table size="small" >
                         <TableHead>
                             <TableRow>
-                                <TableCell>Bad Message</TableCell>{/*badmessage_transcript: a long string. show the first 10 chars, and expand on hover*/}
-                                <TableCell>Bad User</TableCell>{/*baduser_id: Integer. if 0, write "anonymous"*/}
-                                <TableCell>Bad Device</TableCell>{/*baduser_session: a long string. show the first 10 chars, and expand on hover */}
-                                <TableCell>Sent at</TableCell>{/*badmessage_timestamp: date and time. convert unix timestamp to date and time. if the date is recent, write it in the format "today", "yesterday", ... eg: "yesterday, 12:01 AM"*/}
-                                <TableCell>Actions</TableCell>{/*This row must contain a "ban" button, that calls a callback with baduser_id and baduser_session */}
-                                <TableCell>Reporter</TableCell>{/*reporter_user_id: Integer. if 0, write "anonymous"*/}
-                                <TableCell>Reporter Device</TableCell>{/*reporter_session: a long string. show the first 10 chars, and expand on hover */}
-                                <TableCell>Reported at</TableCell>{/*event_timestamp: date and time. convert unix timestamp to date and time. if the date is recent, write it in the format "today", "yesterday", ... eg: "yesterday, 12:01 AM"*/}
-                                <TableCell>Actions</TableCell>{/*This row must contain a "ban reporter" button, that calls a callback with baduser_id and baduser_session */}
+                                <TableCell>Kötü Mesaj</TableCell>{/*badmessage_transcript: a long string. show the first 10 chars, and expand on hover*/}
+                                <TableCell>Kötü Kullanıcı</TableCell>{/*baduser_id: Integer. if 0, write "anonymous"*/}
+                                <TableCell>Kötü Cihaz</TableCell>{/*baduser_session: a long string. show the first 10 chars, and expand on hover */}
+                                <TableCell>Gönderildi</TableCell>{/*badmessage_timestamp: date and time. convert unix timestamp to date and time. if the date is recent, write it in the format "today", "yesterday", ... eg: "yesterday, 12:01 AM"*/}
+                                <TableCell>İşlemler</TableCell>{/*This row must contain a "ban" button, that calls a callback with baduser_id and baduser_session */}
+                                <TableCell>Bildiren</TableCell>{/*reporter_user_id: Integer. if 0, write "anonymous"*/}
+                                <TableCell>Bildiren Cihaz</TableCell>{/*reporter_session: a long string. show the first 10 chars, and expand on hover */}
+                                <TableCell>Bildirildi</TableCell>{/*event_timestamp: date and time. convert unix timestamp to date and time. if the date is recent, write it in the format "today", "yesterday", ... eg: "yesterday, 12:01 AM"*/}
+                                <TableCell>İşlemler</TableCell>{/*This row must contain a "ban reporter" button, that calls a callback with baduser_id and baduser_session */}
                             </TableRow>
                         </TableHead>
                         <ReportActionsTable data={modData.report_actions} />
@@ -199,10 +199,10 @@ const BanActionsTable = React.memo(({ data }) => {
           <TableRow key={action.id}>
             <TableCell>{formatDate(date)}</TableCell>
             <TableCell>
-              Moderator @{action.moderator_username}
+              Denetçi @{action.moderator_username}
               {action.moderator_notes && `: ${action.moderator_notes}`}
             </TableCell>
-            <TableCell>{action.is_ban_revert ? "ban REVERT" : "BAN"}</TableCell>
+            <TableCell>{action.is_ban_revert ? "YASAKLAMA GERİ ALINDI" : "YASAKLA"}</TableCell>
             <TableCellWithCopy text={action.baduser_id === 0 ? "--" : action.baduser_username} />
             <TableCellWithCopy title={action.baduser_session} text={action.baduser_session} />
           </TableRow>
@@ -221,12 +221,12 @@ const UsersTable = React.memo(({ data }) => {
         <TableRow key={isAnon ? `anon-${user.last_session}` : user.id}>
           <TableCell>{isAnon ? "-" : user.callsign}</TableCell>
           <TableCell>{isAnon ? "-" : user.country}</TableCell>
-          <TableCell>{isAnon ? "-" : user.is_verified ? "YES": "no"}</TableCell>
+          <TableCell>{isAnon ? "-" : user.is_verified ? "EVET": "hayır"}</TableCell>
           <TableCellWithCopy text={isAnon ? "-" : user.username} />
           <TableCellWithCopy text={isAnon ? user.last_session : "-"} />
           <TableCell>
             <BanButton variant="outlined" size="small" username={user.username} session={user.last_session} revert={true}>
-              Revert ban
+              Yasağı geri al
             </BanButton>
           </TableCell>
         </TableRow>
@@ -252,7 +252,7 @@ const ReportActionsTable = React.memo(({ data }) => {
             <TableCell>{formatDate(badMsgDate)}</TableCell>
             <TableCell>
               <BanButton variant="outlined" size="small" username={report.baduser_username} session={report.baduser_session} >
-                            Ban
+                            Yasakla
               </BanButton>
             </TableCell>
             <TableCellWithCopy text={report.reporter_user_id === 0 ? "--" : report.reporter_username} />
@@ -260,7 +260,7 @@ const ReportActionsTable = React.memo(({ data }) => {
             <TableCell>{formatDate(reportDate)}</TableCell>
             <TableCell>
               <BanButton variant="outlined" size="small" username={report.reporter_username} session={report.reporter_session} >
-                            Ban reporter
+                            Bildireni yasakla
               </BanButton>
             </TableCell>
           </TableRow>

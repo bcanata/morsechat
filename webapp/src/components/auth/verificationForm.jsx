@@ -15,18 +15,18 @@ const VerificationForm = ({setPage}) =>{
       </Grid>
       <Grid item xs={12} >
         <Typography variant="h5" color="secondary" >
-          one last step
+          son bir adım
         </Typography>
         <Typography variant="body2" color="primary" >
-          (optional)
+          (isteğe bağlı)
         </Typography>
       </Grid>
       <Grid item xs={12} >
         <Typography variant="body2" color="primary" >
-          Verify your account to enable passwordless logins in one click, and avoid usage limitations.
+          Tek tıkla şifresiz giriş özelliğini etkinleştirmek ve kullanım sınırlamalarından kaçınmak için hesabınızı doğrulayın.
         </Typography>
         <Typography variant="body2" color="primary" >
-          This is the only option to recover your account if you forget your credentials
+          Kimlik bilgilerinizi unutursanız hesabınızı kurtarmanın tek yolu budur
         </Typography>
       </Grid>
       <Grid item xs={12} >
@@ -35,7 +35,7 @@ const VerificationForm = ({setPage}) =>{
       </Grid>
       <Grid item xs={12} >
         <Button size="medium" color="primary" onClick={handleCancel} variant="contained">
-          skip
+          atla
         </Button>
       </Grid>
     </Grid>
