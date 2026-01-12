@@ -15,6 +15,11 @@ function SimpleEditor(props){
   const dispatch = useDispatch()
   let [modulesData, setModulesData] = React.useState(props.schema)
 
+  // Reset modulesData when schema changes (e.g., country changes)
+  React.useEffect(() => {
+    setModulesData(props.schema)
+  }, [props.schema])
+
   let validationStates = {
     'GOOD': 0,
     'LOADING': 1,
@@ -139,8 +144,9 @@ function SimpleEditor(props){
 
 const CallSignEditor = (props) =>{
   const country = useSelector(state => state.user.country)
-  //TODO: replace this hardcoded data with data received from the apis
-  const [schema, setSchema] = React.useState(() => {
+
+  // Reactive schema that updates when country changes
+  const schema = React.useMemo(() => {
     // Turkish callsign format: TA/TB + 1 digit + 1-3 letters
     if (country === 'TA' || country === 'TB') {
       return [
@@ -186,7 +192,7 @@ const CallSignEditor = (props) =>{
         description: "3 letters"
       },
     ]
-  });
+  }, [country]);
   const [schemaCode,  setSchemaCode] = React.useState("mrse_default")
 
   function handleSetData(data){
