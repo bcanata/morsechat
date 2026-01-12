@@ -20,71 +20,6 @@ function SimpleEditor(props){
     setModulesData(props.schema)
   }, [props.schema])
 
-  // Watch for country changes and update schema accordingly
-  React.useEffect(() => {
-    const selectedCountry = modulesData[0]?.value
-    if (selectedCountry === 'TA' || selectedCountry === 'TB') {
-      // Turkish format: 1 digit + 1-3 letters
-      if (modulesData.length === 3) {
-        setModulesData(prev => {
-          const newModules = [...prev]
-          // Update digit field to 1 character
-          if (newModules[1].module === 'text') {
-            newModules[1] = {
-              ...newModules[1],
-              len: 1,
-              ecmaPattern: '^[0-9]*$',
-              description: "1 digit",
-              value: newModules[1].value.slice(0, 1)
-            }
-          }
-          // Update letters field to 1-3 characters (variable length)
-          if (newModules[2].module === 'text') {
-            newModules[2] = {
-              ...newModules[2],
-              minLen: 1,
-              maxLen: 3,
-              len: undefined,
-              ecmaPattern: '^[A-Za-z]*$',
-              description: "1-3 letters"
-            }
-          }
-          return newModules
-        })
-      }
-    } else {
-      // International format: 2 digits + 3 letters
-      if (modulesData.length === 3) {
-        setModulesData(prev => {
-          const newModules = [...prev]
-          // Update digit field to 2 characters
-          if (newModules[1].module === 'text') {
-            newModules[1] = {
-              ...newModules[1],
-              len: 2,
-              minLen: undefined,
-              maxLen: undefined,
-              ecmaPattern: '^[0-9]*$',
-              description: "2 numbers"
-            }
-          }
-          // Update letters field to 3 characters (fixed length)
-          if (newModules[2].module === 'text') {
-            newModules[2] = {
-              ...newModules[2],
-              len: 3,
-              minLen: undefined,
-              maxLen: undefined,
-              ecmaPattern: '^[A-Za-z]*$',
-              description: "3 letters"
-            }
-          }
-          return newModules
-        })
-      }
-    }
-  }, [modulesData[0]?.value])
-
   let validationStates = {
     'GOOD': 0,
     'LOADING': 1,
@@ -170,6 +105,10 @@ function SimpleEditor(props){
         item.value = newValue
         //put the modified element back into the array, mutating it (it's ok cause it's a shallow copy)
         items[i] = item
+        // Notify parent when country changes
+        if (i === 0 && props.onCountryChange && item.module === 'country') {
+          props.onCountryChange(newValue)
+        }
         return items
       })
     }
@@ -209,15 +148,31 @@ function SimpleEditor(props){
 
 const CallSignEditor = (props) =>{
   const country = useSelector(state => state.user.country)
+  const [selectedCountry, setSelectedCountry] = React.useState(country)
 
-  // Reactive schema that updates when country changes
+  // Initialize selectedCountry from Redux
+  React.useEffect(() => {
+    // Set to TA for Turkish users, otherwise use geolocated country
+    if (country === 'TR') {
+      setSelectedCountry('TA')
+    } else {
+      setSelectedCountry(country)
+    }
+  }, [country])
+
+  // Track country changes from SimpleEditor
+  function handleCountryChange(newCountry) {
+    setSelectedCountry(newCountry)
+  }
+
+  // Reactive schema based on selected country
   const schema = React.useMemo(() => {
     // Turkish callsign format: TA/TB + 1 digit + 1-3 letters
-    if (country === 'TA' || country === 'TB') {
+    if (selectedCountry === 'TA' || selectedCountry === 'TB') {
       return [
         {
           module: 'country',
-          value: country
+          value: selectedCountry
         },
         {
           module: 'text',
@@ -240,7 +195,7 @@ const CallSignEditor = (props) =>{
     return [
       {
         module: 'country',
-        value: country
+        value: selectedCountry
       },
       {
         module: 'text',
@@ -257,7 +212,7 @@ const CallSignEditor = (props) =>{
         description: "3 letters"
       },
     ]
-  }, [country]);
+  }, [selectedCountry]);
   const [schemaCode,  setSchemaCode] = React.useState("mrse_default")
 
   function handleSetData(data){
@@ -266,7 +221,7 @@ const CallSignEditor = (props) =>{
 
  return (
    <>
-    <SimpleEditor schema={schema} setData={handleSetData} />
+    <SimpleEditor schema={schema} setData={handleSetData} onCountryChange={handleCountryChange} />
     </>
  )
 }
