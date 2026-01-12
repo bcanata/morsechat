@@ -8,9 +8,9 @@
 
 [![Discord](https://img.shields.io/discord/842882128555016212?label=Discord%20community)](https://discord.gg/JNwsmHuKwd)
 
-An online morse code chat, allowing users from all over the world to practice and communicate in morse code without the need for expensive equipment. Live at [morse.halb.it](https://morse.halb.it/)
+Dünyanın her yerinden kullanıcıların morse kodunda pratik yapmasına ve pahalı ekipmanlara ihtiyaç duymadan iletişim kurmasına olanak tanıyan çevrimiçi bir morse kodu sohbeti. [morse.halb.it](https://morse.halb.it/) adresinde canlı
 
-## screenshots
+## ekran görüntüleri
 <p align="center">
 <img src="./docs/tablet_a.png" width="600px" height="auto" />
 <img src="./docs/phone.png" width="190px" height="auto" />
@@ -21,36 +21,36 @@ w 600 200
 h 500 400
 -->
 
-## configuration
+## yapılandırma
 
-Copy the file env.example into .env
+env.example dosyasını .env olarak kopyalayın
 
-in the .env configure your app secret
+.env dosyasında uygulama gizli anahtarınızı yapılandırın
 
 
-## development
+## geliştirme
 
-clone this repository `git clone https://github.com/robalb/morsechat.git`
+bu depoyu klonlayın `git clone https://github.com/robalb/morsechat.git`
 
-navigate into the repository `cd morsechat`
+depo içine gidin `cd morsechat`
 
-start the backend server in development mode `cd backend && go run -race cmd/morsechat/main.go`
+arka uç sunucusunu geliştirme modunda başlatın `cd backend && go run -race cmd/morsechat/main.go`
 
-start vite in development mode `cd web && npm run dev`
+vite'i geliştirme modunda başlatın `cd web && npm run dev`
 
-These steps are enough to get a local version of the app running.
-The backend also includes unit, e2e, and fuzz tests, which you can run with the command `go test ./...`
+Bu adımlar uygulamanın yerel bir sürümünü çalıştırmak için yeterlidir.
+Arka uç aynı zamanda birim, uçtan uca ve fuzz testleri de içerir, bunları `go test ./...` komutuyla çalıştırabilirsiniz
 
-## production
+## üretim
 
-The easiest way to run the webapp in a production environment is with the provided docker-compose.yml,
+Web uygulamasını bir üretim ortamında çalıştırmanın en kolay yolu sağlanan docker-compose.yml dosyasını kullanmaktır,
 `docker-compose up --build`
 
 
-Alternatively you can deploy the app on a k8s kluster using the manifests in `kubernetes/base` but first you will need to
-setup on your own a traefik ingress controller and certmanager.
-The backend webserver is configured to handle X-Forwarder-For headers coming from an ingress with proxy protocol enabled.
-You can configure it in flaskapp.conf
+Alternatif olarak, `kubernetes/base` dizinindeki bildirimleri kullanarak uygulamayı bir k8s kümesine dağıtabilirsiniz, ancak öncelikle
+kendi traefik ingress kontrolcünüzü ve certmanager'ınızı kurmanız gerekecektir.
+Arka uç web sunucusu, proxy protokolü etkinleştirilmiş bir ingress'ten gelen X-Forwarder-For başlıklarını işleyecek şekilde yapılandırılmıştır.
+Bunu flaskapp.conf dosyasında yapılandırabilirsiniz
 
-The live website on halb.it is built using github workflows, and deployed on a k8s cluster with argoCD
+halb.it'teki canlı web sitesi github iş akışları kullanılarak oluşturulur ve argoCD ile bir k8s kümesine dağıtılır
 
