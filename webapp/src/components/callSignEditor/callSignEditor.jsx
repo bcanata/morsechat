@@ -20,6 +20,71 @@ function SimpleEditor(props){
     setModulesData(props.schema)
   }, [props.schema])
 
+  // Watch for country changes and update schema accordingly
+  React.useEffect(() => {
+    const selectedCountry = modulesData[0]?.value
+    if (selectedCountry === 'TA' || selectedCountry === 'TB') {
+      // Turkish format: 1 digit + 1-3 letters
+      if (modulesData.length === 3) {
+        setModulesData(prev => {
+          const newModules = [...prev]
+          // Update digit field to 1 character
+          if (newModules[1].module === 'text') {
+            newModules[1] = {
+              ...newModules[1],
+              len: 1,
+              ecmaPattern: '^[0-9]*$',
+              description: "1 digit",
+              value: newModules[1].value.slice(0, 1)
+            }
+          }
+          // Update letters field to 1-3 characters (variable length)
+          if (newModules[2].module === 'text') {
+            newModules[2] = {
+              ...newModules[2],
+              minLen: 1,
+              maxLen: 3,
+              len: undefined,
+              ecmaPattern: '^[A-Za-z]*$',
+              description: "1-3 letters"
+            }
+          }
+          return newModules
+        })
+      }
+    } else {
+      // International format: 2 digits + 3 letters
+      if (modulesData.length === 3) {
+        setModulesData(prev => {
+          const newModules = [...prev]
+          // Update digit field to 2 characters
+          if (newModules[1].module === 'text') {
+            newModules[1] = {
+              ...newModules[1],
+              len: 2,
+              minLen: undefined,
+              maxLen: undefined,
+              ecmaPattern: '^[0-9]*$',
+              description: "2 numbers"
+            }
+          }
+          // Update letters field to 3 characters (fixed length)
+          if (newModules[2].module === 'text') {
+            newModules[2] = {
+              ...newModules[2],
+              len: 3,
+              minLen: undefined,
+              maxLen: undefined,
+              ecmaPattern: '^[A-Za-z]*$',
+              description: "3 letters"
+            }
+          }
+          return newModules
+        })
+      }
+    }
+  }, [modulesData[0]?.value])
+
   let validationStates = {
     'GOOD': 0,
     'LOADING': 1,
